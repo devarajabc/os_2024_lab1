@@ -13,13 +13,14 @@
 #include <time.h>
 #include <sys/mman.h>
 #define NAME "/shemem-1"
+#define SIZE 1024
 typedef struct {
     int flag;      // 1 for message passing, 2 for shared memory
     union{
         int msqid; //for system V api. You can replace it with struecture for POSIX api
         char* shm_addr;
     }storage;
-    int size;
+    int fd;
 } mailbox_t;
 
 
