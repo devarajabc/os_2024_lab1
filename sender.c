@@ -6,10 +6,10 @@ void send(message_t message, mailbox_t* mailbox_ptr){
         2. According to the communication method, send the message
     */
    if (mailbox_ptr->flag == 2){// share memory
-        char *string = (char *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, mailbox_ptr->fd, 0);// each line
-        strncpy(string, message.buffer,SIZE);
-        printf("Sending message: %s\n", string);
-        munmap(string, SIZE);
+        //char *string = (char *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, mailbox_ptr->fd, 0);// each line
+        strncpy(mailbox_ptr->ptr, message.buffer,SIZE);
+        printf("Sending message: %s\n", mailbox_ptr->ptr);
+        //munmap(string, SIZE);
    }
 }
 
@@ -36,6 +36,7 @@ int main(int argc, char *argv[]){
            exit(1);
         ftruncate(fd, SIZE);// set the shared memory object size.
         message_t message;
+        mailbox.ptr = (char *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);// each line
         struct timespec start, end;
         while (fgets(message.buffer, sizeof(message.buffer), file)) {
             clock_gettime(CLOCK_MONOTONIC, &start);
