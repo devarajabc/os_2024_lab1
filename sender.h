@@ -11,13 +11,15 @@
 #include <sys/shm.h>
 #include <semaphore.h>
 #include <time.h>
-
+#include <sys/mman.h>
+#define NAME "/shemem-1"
 typedef struct {
     int flag;      // 1 for message passing, 2 for shared memory
     union{
         int msqid; //for system V api. You can replace it with struecture for POSIX api
         char* shm_addr;
     }storage;
+    int size;
 } mailbox_t;
 
 
@@ -25,6 +27,7 @@ typedef struct {
     /*  TODO: 
         Message structure for wrapper
     */
+    char buffer[1024];
 } message_t;
 
 void send(message_t message, mailbox_t* mailbox_ptr);
